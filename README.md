@@ -37,19 +37,6 @@
 - Bootstrap 5.3.3,
 - Docker 27.2.1
 
-## Команда разработчиков.
-[Илья Зотов](https://github.com/skrynch)
-
-[Сергей Корсаков](https://github.com/mortodello)
-
-[Эльнара Кучина](https://github.com/elnara-k)
-
-[Евгения Розанова](https://github.com/rosevga)
-
-[Роман Татаренков](https://github.com/tatarenkov-r-v)
-
-[Рубен Язычьян](https://github.com/skrynch)
-
 ## Настройка и запуск проекта.
 ### 1. Запуск проект на локальном компьютере.
 1.1. Клонировать репозиторий и перейти в него в командной строке:
