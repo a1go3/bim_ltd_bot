@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <h2 style="margin-top: 20px;">
+            {{ table.alt_table_name }}
+        </h2>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alert-container">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    <div class="content pt-3">
+        <div class="d-flex align-items-center mb-3">
+            <button class="btn btn-outline-primary" style="border-radius: 8px; margin-left: 10px;"
+                data-bs-toggle="modal" data-bs-target="#AddModal">
+                Добавить<i class="bi bi-plus-lg" style="margin-left: 5px;"></i></button>
+            <form class="d-flex" role="search">
+                <input class="form-control" type="search" style=" margin-left: 10px;" placeholder="Поиск" aria-label="Поиск">
+                <button class="btn btn-outline-success" style=" margin-left: 10px;" type="submit">Поиск</button>
+            </form>
+            <button class="btn btn-outline-success" style="border-radius: 8px; margin-left: 10px;">
+                Фильтры<i class="bi bi-sliders" style="margin-left: 5px;"></i></button>
+        </div>
+        <div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover custom-table">
+                <thead class="table-primary">
+                    <tr class="text-center">
+                        {% for field in table.get_field_names() %}
+                            <th>{{ field }}</th>
+                        {% endfor %}
+                        <th class="text-center" scope="col">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list %}
+                    <tr>
+                        {% for column in object.__table__.columns %}
+                            {% if column.name != 'id' %}
+                                <td class="text-center">
+                                    {% set value = object[column.name] %}
+                                    {% if column.name == 'typeproduct_id' %}
+                                        {{ object.typeproduct.name }}
+                                    {% elif column.name == 'brand_id' %}
+                                        {{ object.brand.name }}
+                                    {% elif column.name == 'description' %}
+                                    <div class="parent-container">
+                                        <span id="short-description">{{ value[:10] }}...</span>
+                                        <button type="button" class="btn btn-outline-info"
+                                            data-bs-toggle="modal" data-bs-target="#DescriptionModal{{ object['id'] }}">
+                                        </button>
+                                    </div>
+                                        <div class="modal fade" id="DescriptionModal{{ object['id'] }}"
+                                            tabindex="-1" aria-labelledby="DescriptionModalLabel{{ object['id'] }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="DescriptionModalLabel{{ object['id'] }}">Описание</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ value }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-dismiss="modal">Закрыть</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% elif column.name == 'pdf_url' %}
+                                        <a href="{{ value }}"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           data-bs-custom-class="custom-tooltip"
+                                           title="Открыть PDF">
+                                            <i class="bi bi-file-earmark-pdf" style="font-size: 24px; color: red;"></i>
+                                        </a>
+                                    {% elif column.name == 'image_url' %}
+                                        <a href="{{ value }}"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            title="Открыть изображение">
+                                            <i class="bi bi-image" style="font-size: 24px; color: blue;"></i>
+                                        </a>
+                                    {% else %}
+                                        {{ value }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        {% if table.__tablename__ == 'product' %}
+                        <td>
+                            <ul>
+                                {% for character in object.character %}
+                                    <li>{{ character }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        {% endif %}
+                        <td>
+                            <div class="parent-container">
+                            <div class="button-container">
+                                <button type="button" class="btn custom-btn-red"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#EditModal{{ object['id'] }}">
+                                    <i class="bi bi-pencil" style="margin-left: 5px;"></i>
+                                </button>
+                                {% include "form_edit.html" %}
+                                <form action="{{ url_for(table.__tablename__  + '_list_view') }}" method="post" style="display:inline;"
+                                onsubmit="return confirm('Вы уверены, что хотите удалить?');">
+                                    <input type="hidden" name="object_id" value="{{ object.id }}">
+                                    <button type="submit"  class="btn custom-btn-del"
+                                        title="Удалить">
+                                        <i class="bi bi-trash" style="margin-left: 5px;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% include "form_add.html" %}
+    </div>
+
+
+</main>
+{% endblock %}

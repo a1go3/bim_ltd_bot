@@ -1,0 +1,35 @@
+<nav class="col-md-3 col-lg-2 d-md-block sidebar">
+    <div class="position-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Главная</a>
+            </li>
+            <li class="nav-item">
+                {% for table, name in tables %}
+                <a class="nav-link {% if active_page == table %}active{% endif %}" href="{{ url_for(table + '_list_view') }}">{{ name }}</a>
+            </li>
+            {% endfor %}
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Выход</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Подтверждение выхода</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Вы точно хотите выйти?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Нет</button>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-primary">Да, выйти</a>
+            </div>
+        </div>
+    </div>
+</div>

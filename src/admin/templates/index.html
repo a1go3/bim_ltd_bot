@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        {% for product in product_list %}
+          <h2 style="margin-top: 20px;">
+            {{ product.typeproduct.name }}</h2>
+        {% endfor %}
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alert-container">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    <div class="content pt-3">
+        <p>Здесь находится основной контент для выбранного раздела.</p>
+        {% for id, name in brand_list %}
+        <p>{{id, name}}</p>
+        {% endfor %}
+
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,19 @@
+[flake8]
+ignore = E265, F811, D100, D105, D104, W504, W292, N818, N805, W503, C901, R503, R505, D103
+paths = .
+exclude =
+    tests/,
+    */migrations/,
+    */alembic/*,
+    venv/,
+    */venv/,
+    env/
+    */env/,
+    */manage.py,
+    .venv/,
+    venv/,
+    .handlers/serviceman_handlers,
+per-file-ignores =
+    */__init__.py:F401, E402
+    */settings.py:E501
+max-complexity = 10

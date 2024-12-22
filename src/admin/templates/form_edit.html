@@ -1,0 +1,72 @@
+<div class="modal fade" id="EditModal{{ object['id'] }}" tabindex="-1"
+    aria-labelledby="EditModalLabel{{ object['id'] }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <input type="hidden" id="objectId" name="objectId">
+            <h5 class="modal-title" id="EditModalLabel{{ object['id'] }}">Редактировать </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form class="row g-3" method="POST" action="{{ url_for( table.__tablename__  + '_edit_view',  id= object['id']) }}">
+                {% for field in table.__table__.columns %}
+                {% if field.name not in ['id', 'created_at', 'updated_at', 'view_stats'] %}
+                <div class="form-group">
+                    <label for="{{ field.name }}">{{ field.name.capitalize() }}</label>
+                    {% if field.name == 'typeproduct_id' %}
+                      <select class="form-select" id="typeproduct_id" name="typeproduct_id" required>
+                        <option selected disabled>Выберите тип продукта</option>
+                        {% for id, name in type_product_list %}
+                            <option value={{ id }}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% elif field.name == 'brand_id' %}
+                      <select class="form-select" id="brand_id" name="brand_id" required>
+                        <option selected disabled>Выберите бренд</option>
+                        {% for id, name in brand_list %}
+                            <option value="{{ id }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% elif field.name == 'description' %}
+                        <textarea class="form-control" id="{{ field.name }}" name="{{ field.name }}" required>{{ object[field.name] }}</textarea>
+                        {% elif field.name == 'price' %}
+                        <input type="number" class="form-control" id="{{ field.name }}" name="{{ field.name }}" value="{{ object[field.name] }}" step="1000">
+                    {% elif field.name == 'power' %}
+                        <input type="number" class="form-control" id="{{ field.name }}" name="{{ field.name }}" step="100" value="{{ object[field.name] }}" required>
+                    {% elif field.name == 'pdf_url' %}
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                          <input type="file" class="form-control" id="inputPdf" name="pdf_url" accept=".pdf">
+                      </div>
+                    {% elif field.name == 'image_url' %}
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-image"></i></span>
+                        <input type="file" class="form-control" id="inputImage" name="image_url" accept="image/*">
+                      </div>
+                    {% else %}
+                        <input type="text" class="form-control" id="{{ field.name }}"
+                        name="{{ field.name }}" value="{{ object[field.name] }}" required>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% if table.__tablename__ == 'product' %}
+            <fieldset id="character_id" name="character_id">
+              <legend>Выберите характеристики:</legend>
+              {% for id, name in character_list %}
+                  <div class="character-option">
+                      <input type="checkbox" id="character_{{ id }}" name="character_id" value="{{ id }}">
+                      <label for="character_{{ id }}">{{ name }}</label>
+                  </div>
+              {% endfor %}
+          </fieldset>
+        {% endif %}
+            <button type="submit" class="btn btn-outline-primary">Подтвердить изменение</button>
+              </form>
+              <div class="modal-footer">
+                <a href="{{ url_for(table.__tablename__ + '_list_view') }}" class="btn btn-outline-secondary mt-2">Вернуться</a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>

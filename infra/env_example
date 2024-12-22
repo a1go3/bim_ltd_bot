@@ -1,0 +1,18 @@
+#Переменные окружения для работы на удаленном сервере. Все поля обязательны для заполнения.
+
+BOT_TOKEN=7162855483:AAHch9u83H7iYqXA0fqu25P6PMUKE8aGGUc
+
+POSTGRES_USER=db_user
+POSTGRES_PASSWORD=superpassword
+POSTGRES_DB=db_bim
+POSTGRES_SERVER=db
+POSTGRES_PORT=5432
+
+
+
+SERVER_URL=//bimltd-team2.rsateam.ru/
+
+UVICORN_PORT=8000
+UVICORN_SERVER=0.0.0.0
+
+SECRET_KEY=supersecretkey

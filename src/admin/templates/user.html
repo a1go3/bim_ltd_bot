@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h2 style="margin-top: 20px;">
+        {{ table.alt_table_name }}
+    </h2>
+    <div class="content pt-3">
+        <div class="d-flex align-items-center mb-3">
+        <button class="btn btn-outline-primary"
+        style="border-radius: 8px; margin-left: 10px;"
+        onclick="toggleAddUserForm()">
+                Добавить<i class="bi bi-plus-lg" style="margin-left: 5px;"></i></button>
+    </div>
+    <div id="addUserForm" class="card p-3 mb-4" style="display:none;">
+        <form action="{{ url_for('user_add_view') }}" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Role:</label>
+                <select id="role" name="role" class="form-select">
+                    <option value="regular" title="Может только просматривать страницы.">Regular</option>
+                    <option value="editor_role" title="Может создавать и редактировать записи.">Editor</option>
+                    <option value="superuser" title="Может добавлять новые записи, редактировать и удалять.">Superuser</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-outline-success">Добавить пользователя</button>
+        </form>
+    </div>
+    <div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover custom-table">
+            <thead class="table-primary">
+                <tr class="text-center">
+                    {% for field in table.get_field_names() %}
+                        <th>{{ field }}</th>
+                    {% endfor %}
+                        <th>Дейсвтия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in object_list %}
+                    <tr>
+                        {% for column in object.__table__.columns %}
+                        {% if column.name not in ['id', 'password_hash'] %}
+                            <td class="text-center">
+                                {% set value = object[column.name] %}
+                                {% if column.name == 'role' %}
+                                {{ value.name }}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                            </td>
+                        {% endif %}
+                        {% endfor %}
+                        <td class="text-center">
+                            <form action="{{ url_for('user_delete_view', user_id=object.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-outline-danger custom-btn-del">Delete</button>
+                            </form>
+                            <button class="btn btn-outline-secondary ml-2" onclick="togglePasswordForm({{ object.id }})">Change Password</button>
+                            <div id="passwordForm-{{ object.id }}" class="password-form card p-3 mt-2" style="display:none;">
+                                <form action="{{ url_for('change_password_view', user_id=object.id) }}" method="POST">
+                                    <div class="mb-3">
+                                        <label for="new_password" class="form-label">New Password:</label>
+                                        <input type="password" id="new_password" name="new_password" class="form-control" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning">Change Password</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<script>
+function togglePasswordForm(userId) {
+    var form = document.getElementById('passwordForm-' + userId);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+
+<script>
+    function toggleAddUserForm() {
+        var form = document.getElementById('addUserForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+    </script>
+
+</main>
+{% endblock %}

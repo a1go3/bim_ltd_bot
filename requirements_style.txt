@@ -1,0 +1,9 @@
+pre-commit==3.7.1
+black==24.8.0
+flake8==7.1.1
+isort==5.13.2
+flake8-docstrings
+flake8-isort
+flake8-return
+flake8-broken-line
+pep8-naming
